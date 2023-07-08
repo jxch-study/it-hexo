@@ -103,5 +103,5 @@ theme: hexo-theme-tree
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repo: git@github.com:jxch-study/jxch-study.github.io.git
+  repo: git@github.com-jxch-it:jxch-study/jxch-study.github.io.git
   branch: main
