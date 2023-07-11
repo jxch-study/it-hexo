@@ -81,14 +81,73 @@ tags: [Sentinel]
       rule‐type: system
     ```
 
+# 总结梳理
 
+## 限流
 
+- 前端限流
+    
+- 接入层nginx限流
+    
+- 网关限流
+    
+    - 基于redis+lua脚本限流（RequestRateLimiter，令牌桶）
+        
+    - sentinel限流
+        
+        - route维度限流：针对请求属性进行流控
+            
+        - API维度限流
+            
+        - 规则持久化
+            
+            - 改造Sentinel控制台（指定端口和nacos配置中心地址）
+                
+            - 网关规则实体转换： RuleEntity#toRule； ApiDefinitionEntity#toApiDefinition； GatewayFlowRuleEntity#toGatewayFlowRule
+                
+            - json解析丢失数据：重写实体类MyApiDefinition,再转换为ApiDefinition
+                
+- 应用层限流（微服务接入sentinel）
+    
+    - 匀速排队限流：处理间隔性突发的流量（漏桶算法）
+        
+        - 暂时不支持 QPS > 1000 的场景
+            
+    - 热点参数限流（`@SentinelResource("resourceName")`）
+        
+        - 参数必须是7种基本数据类型才会生效
+            
 
+## 降级
 
+- 自动化运维
+    
+    - 自动开关降级（超时、失败次数、故障、限流）
+        
+    - 手动开关降级
+        
+- 功能维度：读服务降级、写服务降级
+    
+- 系统层次维度：JS降级开关、接入层降级开关、应用层降级开关（OpenFeign整合Sentinel）
+    
 
+## 拒绝服务
 
-
-
-
-
+- 系统资源过载保护
+    
+- [Nginx过载保护](https://github.com/alibaba/nginx-http-sysguard)
+    
+- Sentinel自适应限流
+    
+    - Load 自适应（Linux/Unix­like）：参考值 CPU cores \* 2.5
+        
+    - CPU usage：比较灵敏
+        
+    - 平均 RT：单位是毫秒
+        
+    - 并发线程数
+        
+    - 入口 QPS
+        
+    - 系统规则持久化（system‐rules.nacos）
 

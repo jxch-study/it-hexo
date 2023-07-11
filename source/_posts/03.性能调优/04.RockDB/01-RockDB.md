@@ -58,4 +58,43 @@ LSM-Tree 的全称是The Log-Structured Merge-Tree，是一种非常复杂的复
    4. 使用多个memtable并在immutbale memtable提前进行数据合并的优
    5. 为存储的数据逻辑分族，独特的filter 对读优化
 
+# 总结梳理
+
+虽然其性能还不如 Redis，但是已经可以算是在同一个量级水平了，毕竟一个是内存操作，另一个是磁盘IO操作。RocksDB 的数据结构，可以保证写入磁盘的绝大多数操作都是顺序写入的。
+
+## LSM-Tree 如何兼顾读写性能
+
+1. 操作命令写入磁盘的 WAL 日志中（顺序写）：唯一作用就是从故障中恢复系统数据
+    
+2. 写入内存的MemTable中（按照Key组织的跳表，MemTable 太大会导致读写性能下降，一般是32MB）
+    
+    1. 直接将Key 写入 MemTable，而不会预先查看MemTable中是否已经存在该Key
+        
+    2. 写入MemTable之后就可以返回写入成功
+        
+3. MemTable写满之后，就会转换成Immutable(不可变的)MemTable，然后再创建一个空的MemTable继续写
+    
+    1. Immutable MemTable也不能在内存中无限地占地方，而是会有一个后台线程，不停地把Immutable MemTable复制到磁盘文件中，然后释放内存空间。
+        
+    2. 每个Immutable MemTable 对应于一个磁盘文件，这些文件就是SSTable（这些SSTable文件中的Key是有序的,但是文件之间却是完全无序的，所以还是无法查找）
+        
+4. SSTable 采用分层合并机制，SSTable被分为很多层，每一层的容量都有一个固定的上限。下一层的容量是上一层的10倍。
+    
+    1. 当某一层写满时，就会触发后台线程往下一层合并
+        
+    2. 数据合并到下一层之后，本层的SSTable文件就可以删除了
+        
+    3. 合并的过程也是排序的过程，除了Level 0以外，每层中的文件都是有序的
+        
+5. LSM-Tree 查找的过程也是分层查找
+    
+    1. 先在内存中的 MemTable 和Immutable MemTable 中查找，然后再按照顺序依次在磁盘的每层SSTable 文件中查找，一旦找到了就直接返回
+        
+    2. 越是经常被读写到的热数据，它在这个分层结构中就越靠上，对这样的Key 查找就越快
+        
+    3. 在内存中缓存SSTable文件的Key用布隆过滤器避免无谓的查找等，以加速查找过程
+        
+    4. 使用多个memtable并在immutbale memtable提前进行数据合并的优
+        
+    5. 为存储的数据逻辑分族，独特的filter 对读优化
 
