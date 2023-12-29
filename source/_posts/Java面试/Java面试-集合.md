@@ -4,6 +4,8 @@ date: 2023-12-29 10:04:42
 categories: [JDK]
 tags: [Java面试]
 ---
+Java面试-集合：
+[TOC]
 
 # `java`有哪些集合？
 * 实现`Collection`接口和 `Map`接口的
