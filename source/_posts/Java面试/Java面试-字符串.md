@@ -5,6 +5,9 @@ categories: [JDK]
 tags: [Java面试]
 ---
 
+Java面试-字符串:
+[TOC]
+
 # `String`、`StringBuffer` 和 `StringBuilder` 的区别
 
 * **String类是不可变类**，任何对`String`的改变都会引发新的`String`对象的生成；
