@@ -1,7 +1,7 @@
 ---
 title: Java面试-JVM
 date: 2023-12-29 13:21:28
-categories: [JDK]
+categories: [JAVA]
 tags: [Java面试]
 ---
 

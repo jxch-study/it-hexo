@@ -1,7 +1,7 @@
 ---
 title: Java面试-字符串
 date: 2023-12-29 09:46:13
-categories: [JDK]
+categories: [JAVA]
 tags: [Java面试]
 ---
 

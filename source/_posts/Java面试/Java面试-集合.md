@@ -1,7 +1,7 @@
 ---
 title: Java面试-集合
 date: 2023-12-29 10:04:42
-categories: [JDK]
+categories: [JAVA]
 tags: [Java面试]
 ---
 Java面试-集合：

@@ -1,7 +1,7 @@
 ---
 title: Java面试-基础
 date: 2023-12-29 18:39:48
-categories: [JDK]
+categories: [JAVA]
 tags: [Java面试]
 ---
 
